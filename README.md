@@ -64,7 +64,7 @@ the overall layout includes the call to `javascript_include_tag` and
 and JavaScript files placed in your `app/assets/javascripts` folder.
 
 **config/routes.rb**
-```
+```ruby
 Rails.application.routes.draw do
   get '/', to: 'application#index'
 end
