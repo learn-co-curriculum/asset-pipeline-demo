@@ -1,24 +1,63 @@
-# README
+# Asset Pipeline Demo
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Resources
+* [Asset Pipeline](https://edgeguides.rubyonrails.org/asset_pipeline.html)
+* [Layouts and Rendering in Rails](https://guides.rubyonrails.org/layouts_and_rendering.html)
 
-Things you may want to cover:
+Rails includes the "Asset Pipeline" to help manage dependencies for JavaScript
+and CSS.
 
-* Ruby version
+Rails makes these methods (`stylesheet_link_tag` and `javascript_include_tag`)
+available so you can render references to JavaScript and CSS in your views.
+These lines are included inside the main app template
+`app/views/layout/application.html.erb`.
 
-* System dependencies
+```erb
+<%= stylesheet_link_tag "application", media: "all" %>
+<%= javascript_include_tag "application" %>
+```
 
-* Configuration
+## Cache Busting
+Have you ever edited a JavaScript or CSS file, saved it, refreshed your browser
+and not seen changes come through? Sometimes this happens when your browser
+caches the file you've changed. The browser notices you've retrieved
+`/src/my_javascript.js` before and it skips downloading it again because it
+thinks it hasn't changed. 
+ 
+Rails helps prevent this by appending a specific hash at the end of a link to
+any CSS or JavaScript file. The hash makes the file look like
+`/src/my_javascript.self-af89d234c3e28js`. The hash is generated based on the
+contents of the file. If you edit the file the file contents change and the
+hash will change. The new hash in the filename will force the browser "bust
+it's cache" and download the file again because it thinks it's never seen this
+file before.
 
-* Database creation
+So, instead of your files always having the same name (like below) the Rails
+Asset Pipeline adds a hash to each filename (seen further below). This helps
+prevent browsers from using stale resource. Viola.
 
-* Database initialization
+```html
+<link rel="stylesheet" media="all" href="/assets/application.css" />
 
-* How to run the test suite
+<script src="/assets/rails-ujs.js"></script>
+<script src="/assets/activestorage.js"></script>
+<script src="/assets/turbolinks.js"></script>
+<script src="/assets/action_cable.js"></script>
+<script src="/assets/cable.js"></script>
+<script src="/assets/my_javascript.js"></script>
+<script src="/assets/application.js"></script>
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+```html
+<link rel="stylesheet" media="all" href="/assets/application.self-f0d704deea029cf000697e2c0181ec173a1b474645466ed843eb5ee7bb215794.css?body=1" data-turbolinks-track="reload" />
 
-* Deployment instructions
+<script src="/assets/rails-ujs.self-2b8935521e2301b06b45bd42e623eb0c0acf76c3a6ba383b7429c6a2884f8c23.js?body=1" data-turbolinks-track="reload"></script>
+<script src="/assets/activestorage.self-1ed4604ac2170045f1ffca4edb81a75246661555e4f9cf682bb8a21825e32e1c.js?body=1" data-turbolinks-track="reload"></script>
+<script src="/assets/turbolinks.self-569ee74eaa15c1e2019317ff770b8769b1ec033a0f572a485f64c82ddc8f989e.js?body=1" data-turbolinks-track="reload"></script>
+<script src="/assets/action_cable.self-69fddfcddf4fdef9828648f9330d6ce108b93b82b0b8d3affffc59a114853451.js?body=1" data-turbolinks-track="reload"></script>
+<script src="/assets/cable.self-8484513823f404ed0c0f039f75243bfdede7af7919dda65f2e66391252443ce9.js?body=1" data-turbolinks-track="reload"></script>
+<script src="/assets/my_javascript.self-b91fd6c62b4c5c373535aa39766bef067fd709b0349400b3939b46af645bdf2a.js?body=1" data-turbolinks-track="reload"></script>
+<script src="/assets/application.self-66347cf0a4cb1f26f76868b4697a9eee457c8c3a6da80c6fdd76ff77e911715e.js?body=1" data-turbolinks-track="reload"></script>
+```
 
-* ...
+
