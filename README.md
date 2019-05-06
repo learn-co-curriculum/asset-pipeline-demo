@@ -7,6 +7,13 @@
 Rails includes the "Asset Pipeline" to help manage dependencies for JavaScript
 and CSS.
 
+Rails has a special place it looks for CSS and JavaScript files. It
+expects them to be in `app/assets/javascripts` and `app/assets/stylesheets`.
+You'll see two files `application.js` and `application.css` already in these
+asset directories. These files define dependencies on other `.js` and `.css`
+files. They each include a line `*= require_tree .` which will automatically
+include all the `.js` and `.css` files in that directory.
+
 Rails makes these methods (`stylesheet_link_tag` and `javascript_include_tag`)
 available so you can render references to JavaScript and CSS in your views.
 These lines are included inside the main app template
@@ -15,6 +22,52 @@ These lines are included inside the main app template
 ```erb
 <%= stylesheet_link_tag "application", media: "all" %>
 <%= javascript_include_tag "application" %>
+```
+
+## How to Get It Working
+Refer to [this commit diff](https://github.com/moondump/asset-pipeline-demo/commit/0087cb686bdead899d7263988c6410d7d7f25ec2)
+to see what changes it takes to get your own JavaScript attached to your web
+pages using Rails Asset Pipeline.
+
+* Create a file `app/assets/javascripts/my_javascript.js`
+* Create a file `app/views/application/index.html.erb`
+* Add the following contents to each file
+
+
+**app/assets/javascripts/my_javascript.js**
+```js
+document.write('hello from my custom tiny JS file') 
+```
+
+**app/views/application/index.html.erb**
+```html
+<h1>Just Some Tiny Custom HTML</h1>
+```
+
+Modify the `ApplicationController` to have a method that renders the
+Application index view. This refers to the tiny HTML file above which
+lives at `app/views/application/index.html.erb`.
+
+**app/controllers/application_controller.rb**
+```ruby
+class ApplicationController < ActionController::Base
+  def index
+    render "index"
+  end
+end
+```
+
+Include a route that renders the view. Views are rendered within the overall
+application layout defined in `app/views/layout/application.html.erb`. Since
+the overall layout includes the call to `javascript_include_tag` and
+`stylesheet_link_tag` the view will include proper references to all the CSS
+and JavaScript files placed in your `app/assets/javascripts` folder.
+
+**config/routes.rb**
+```
+Rails.application.routes.draw do
+  get '/', to: 'application#index'
+end
 ```
 
 ## Cache Busting
