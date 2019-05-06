@@ -25,6 +25,8 @@ These lines are included inside the main app template
 ```
 
 ## How to Get It Working
+![minimal diff from project start](diff.png)
+
 Refer to [this commit diff](https://github.com/moondump/asset-pipeline-demo/commit/0087cb686bdead899d7263988c6410d7d7f25ec2)
 to see what changes it takes to get your own JavaScript attached to your web
 pages using Rails Asset Pipeline.
