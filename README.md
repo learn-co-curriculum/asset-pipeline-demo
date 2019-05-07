@@ -59,9 +59,17 @@ Modify the `ApplicationController` to have a method that renders the
 Application index view. This refers to the tiny HTML file above which
 lives at `app/views/application/index.html.erb`.
 
+Add a call to the method `protect_from_forgery_with` to configure the
+ApplicationController to not look for CSRF tokens in forms. Rails usually
+looks for these tokens on HTML forms, but this will interfere with normal
+POST API requests if we don't disable it.
+
 **app/controllers/application_controller.rb**
 ```ruby
 class ApplicationController < ActionController::Base
+  # https://stackoverflow.com/a/35184796
+  protect_from_forgery with: :null_session
+
   def index
     render "index"
   end
