@@ -1,12 +1,47 @@
 # Asset Pipeline Demo
 
 ## Resources
+* [What is Cache Busting](https://www.keycdn.com/support/what-is-cache-busting)
 * [Asset Pipeline](https://edgeguides.rubyonrails.org/asset_pipeline.html)
 * [Layouts and Rendering in Rails](https://guides.rubyonrails.org/layouts_and_rendering.html)
-
 Rails includes the "Asset Pipeline" to help manage dependencies for JavaScript
-and CSS.
+and CSS. One especially helpful thing the Asset Pipeline does is introduce a
+mechanism to manage the browser cache.
 
+## The Browser Cache
+Have you ever edited a file, refreshed your web page and not seen the changes
+come through? This happens when your browser has cached the file. Caching means
+it reuses an old saved version of the file instead of redownloading the file
+again. This speeds up page load times. If the browser ever detects the file
+has changed it will redownload the new version of the file.
+
+Sometimes the browser doesn't notice the file has changed and doesn't download
+the new version. It sees a reference to a file with a name that it's downloaded
+and cached before and it uses that old version.
+
+Rails fixes this caching problem by adding a "fingerprint" to files. The
+fingerprint is a hash (a string that looks like "dfs2bff462...") that's
+generated based on the contents of the file. If the file ever changes then the
+hash changes and the file has a new name. When an HTML file references a CSS of
+JavaScript file it now has the hash fingerprint and your browser sees it as
+a file with a unique name and it forces the browser to download the new version
+of the file. Instead of the browser caching different versions of the file with
+the same name, now the filename changes whenever the file changes so the
+browser will only cache the file according to each version of the file.
+
+This entire problem and technique is called Cache Busting. Read more about it
+by following the link in the list of resources below!
+
+## Is Your Server An API-Only Server or a Server Server?
+This guide assumes you created your application with `rails new my_server`. If
+you created your rails application using `rails s my_api_server --api` with the
+`--api` flag specifically you will need to perform extra steps to configure
+this.
+
+If you created your rails application using the `--api` flag see the 
+[Converting an API-only Server to a Server Server](#converting-an-api-only-server-to-a-server-server) section below.
+
+## Project Structure
 Rails has a special place it looks for CSS and JavaScript files. It
 expects them to be in `app/assets/javascripts` and `app/assets/stylesheets`.
 You'll see two files `application.js` and `application.css` already in these
@@ -23,15 +58,6 @@ These lines are included inside the main app template
 <%= stylesheet_link_tag "application", media: "all" %>
 <%= javascript_include_tag "application" %>
 ```
-
-## Is Your Server An API-Only Server or a Server Server?
-This guide assumes you created your application with `rails new my_server`. If
-you created your rails application using `rails s my_api_server --api` with the
-`--api` flag specifically you will need to perform extra steps to configure
-this.
-
-If you created your rails application using the `--api` flag see the 
-[Converting an API-only Server to a Server Server](#converting-an-api-only-server-to-a-server-server) section below.
 
 ## How to Get It Working
 ![minimal diff from project start](diff.png)
